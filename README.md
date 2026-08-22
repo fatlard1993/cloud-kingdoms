@@ -1,4 +1,4 @@
-# cloud-kingdoms
+# Cloud Kingdoms
 
 Clouds you can land on.
 
@@ -154,9 +154,13 @@ Or build one where you are standing, which is what the tiers were tuned with:
 /cloudkingdom citadel 12345    # reproducible
 ```
 
-## Install
+## Installation
 
 Server-side, with Pandorical on the client. The cloud block is registered
 through Pandorical's content sync, so a connecting player needs Pandorical and
 nothing else; the worldgen registries are marked optional, so nothing else about
 the mod asks anything of the client.
+
+## License
+
+MIT, see [LICENSE](LICENSE).
