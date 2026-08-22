@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:bamboo"
+    },
+    "title": "Fee-Fi-Fo-Fum",
+    "description": "Take a piece of cloud for yourself",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "cloud": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "cloud-kingdoms-justfatlard:cloud"
+          }
+        ]
+      }
+    }
+  },
+  "parent": "cloud-kingdoms-justfatlard:magic_bean"
+}

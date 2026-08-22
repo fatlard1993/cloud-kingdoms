@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:chest",
+  "random_sequence": "cloud-kingdoms-justfatlard:chests/cloud_tarn",
+  "pools": [
+    {
+      "rolls": { "type": "minecraft:uniform", "min": 3.0, "max": 5.0 },
+      "entries": [
+        { "type": "minecraft:item", "name": "minecraft:tropical_fish", "weight": 12,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 4.0 } } },
+        { "type": "minecraft:item", "name": "minecraft:cod", "weight": 10,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 5.0 } } },
+        { "type": "minecraft:item", "name": "minecraft:clay_ball", "weight": 10,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 4.0, "max": 12.0 } } },
+        { "type": "minecraft:item", "name": "minecraft:lily_pad", "weight": 8,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 6.0 } } },
+        { "type": "minecraft:item", "name": "cloud-kingdoms-justfatlard:cloud", "weight": 8,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 4.0, "max": 10.0 } } },
+        { "type": "minecraft:item", "name": "minecraft:prismarine_shard", "weight": 6,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 4.0 } } },
+        { "type": "minecraft:item", "name": "minecraft:water_bucket", "weight": 4 },
+        { "type": "minecraft:item", "name": "minecraft:heart_of_the_sea", "weight": 1 }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        { "type": "minecraft:empty", "weight": 8 },
+        { "type": "minecraft:item", "name": "minecraft:axolotl_bucket", "weight": 3 },
+        { "type": "minecraft:item", "name": "minecraft:trident", "weight": 1 }
+      ]
+    }
+  ]
+}

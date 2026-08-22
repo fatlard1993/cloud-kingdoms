@@ -1,0 +1,79 @@
+{
+  "type": "minecraft:chest",
+  "random_sequence": "cloud-kingdoms-justfatlard:chests/cloud_bank",
+  "pools": [
+    {
+      "rolls": { "type": "minecraft:uniform", "min": 2.0, "max": 4.0 },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:feather",
+          "weight": 14,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 7.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:string",
+          "weight": 10,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 5.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:wind_charge",
+          "weight": 10,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 4.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:arrow",
+          "weight": 9,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 3.0, "max": 9.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:snowball",
+          "weight": 8,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 4.0, "max": 12.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:gold_nugget",
+          "weight": 7,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 8.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:phantom_membrane",
+          "weight": 5,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 2.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "cloud-kingdoms-justfatlard:cloud",
+          "weight": 5,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 6.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_ingot",
+          "weight": 4,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 3.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:emerald",
+          "weight": 3,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 2.0 } }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        { "type": "minecraft:empty", "weight": 10 },
+        { "type": "minecraft:item", "name": "minecraft:name_tag", "weight": 2 },
+        { "type": "minecraft:item", "name": "minecraft:diamond", "weight": 1 }
+      ]
+    }
+  ]
+}

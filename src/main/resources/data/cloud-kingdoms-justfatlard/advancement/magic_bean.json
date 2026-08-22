@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "id": "cloud-kingdoms-justfatlard:magic_bean"
+    },
+    "title": "Worth More Than a Cow",
+    "description": "Come by a magic bean",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "bean": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "cloud-kingdoms-justfatlard:magic_bean"
+          }
+        ]
+      }
+    }
+  },
+  "parent": "minecraft:adventure/root"
+}

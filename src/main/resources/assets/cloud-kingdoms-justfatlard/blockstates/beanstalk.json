@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "cloud-kingdoms-justfatlard:block/beanstalk"
+      },
+      {
+        "model": "cloud-kingdoms-justfatlard:block/beanstalk_b"
+      },
+      {
+        "model": "cloud-kingdoms-justfatlard:block/beanstalk_c"
+      },
+      {
+        "model": "cloud-kingdoms-justfatlard:block/beanstalk_d"
+      },
+      {
+        "model": "cloud-kingdoms-justfatlard:block/beanstalk_e"
+      }
+    ]
+  }
+}

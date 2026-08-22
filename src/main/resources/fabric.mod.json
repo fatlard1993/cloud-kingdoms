@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "cloud-kingdoms-justfatlard",
+  "version": "${version}",
+  "name": "Cloud Kingdoms",
+  "description": "Cloud formations that pass for weather from below and turn out to be somewhere when you get up there",
+  "authors": [
+    "justfatlard"
+  ],
+  "contact": {
+    "sources": "https://github.com/fatlard1993/cloud-kingdoms"
+  },
+  "license": "MIT",
+  "icon": "assets/cloud-kingdoms-justfatlard/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "justfatlard.cloud_kingdoms.CloudKingdoms"
+    ]
+  },
+  "mixins": [
+    "cloud-kingdoms.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.2",
+    "fabric-api": "*",
+    "minecraft": ">=26.2",
+    "java": ">=25",
+    "pandorical": "*"
+  }
+}

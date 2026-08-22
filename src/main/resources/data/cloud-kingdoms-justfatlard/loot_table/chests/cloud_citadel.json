@@ -1,0 +1,123 @@
+{
+  "type": "minecraft:chest",
+  "random_sequence": "cloud-kingdoms-justfatlard:chests/cloud_citadel",
+  "pools": [
+    {
+      "rolls": { "type": "minecraft:uniform", "min": 4.0, "max": 6.0 },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:ender_pearl",
+          "weight": 10,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 6.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:chorus_fruit",
+          "weight": 10,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 3.0, "max": 9.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond",
+          "weight": 8,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 6.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "cloud-kingdoms-justfatlard:cloud",
+          "weight": 8,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 8.0, "max": 20.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:end_stone_bricks",
+          "weight": 7,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 4.0, "max": 12.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:purpur_block",
+          "weight": 7,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 4.0, "max": 12.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:wind_charge",
+          "weight": 7,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 8.0, "max": 20.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:obsidian",
+          "weight": 6,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 6.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:shulker_shell",
+          "weight": 5,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 2.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:end_rod",
+          "weight": 5,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 6.0 } }
+        }
+      ]
+    },
+    {
+      "rolls": 2,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_sword",
+          "weight": 3,
+          "modifier": {
+            "type": "minecraft:enchant_with_levels",
+            "levels": { "type": "minecraft:uniform", "min": 20.0, "max": 39.0 },
+            "options": "#minecraft:on_random_loot"
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_chestplate",
+          "weight": 3,
+          "modifier": {
+            "type": "minecraft:enchant_with_levels",
+            "levels": { "type": "minecraft:uniform", "min": 20.0, "max": 39.0 },
+            "options": "#minecraft:on_random_loot"
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_boots",
+          "weight": 3,
+          "modifier": {
+            "type": "minecraft:enchant_with_levels",
+            "levels": { "type": "minecraft:uniform", "min": 20.0, "max": 39.0 },
+            "options": "#minecraft:on_random_loot"
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:book",
+          "weight": 6,
+          "modifier": {
+            "type": "minecraft:enchant_with_levels",
+            "levels": { "type": "minecraft:uniform", "min": 25.0, "max": 39.0 },
+            "options": "#minecraft:on_random_loot"
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        { "type": "minecraft:empty", "weight": 11 },
+        { "type": "minecraft:item", "name": "minecraft:elytra", "weight": 1 }
+      ]
+    }
+  ]
+}

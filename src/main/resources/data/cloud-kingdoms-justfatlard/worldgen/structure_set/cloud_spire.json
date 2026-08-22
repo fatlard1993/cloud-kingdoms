@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "cloud-kingdoms-justfatlard:cloud_spire",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 72,
+    "separation": 28,
+    "salt": 813355202
+  }
+}

@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "justfatlard.cloud_kingdoms.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"GiantAiMixin",
+		"GoldenGooseMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

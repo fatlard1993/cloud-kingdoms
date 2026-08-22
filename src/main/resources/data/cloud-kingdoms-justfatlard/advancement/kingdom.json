@@ -1,0 +1,31 @@
+{
+  "parent": "cloud-kingdoms-justfatlard:beanstalk",
+  "display": {
+    "icon": {
+      "id": "minecraft:white_wool"
+    },
+    "title": "Head in the Clouds",
+    "description": "Stand on a cloud and find it holds you",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "on_a_cloud": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:stepping_on": {
+              "block": {
+                "blocks": "cloud-kingdoms-justfatlard:cloud"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

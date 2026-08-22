@@ -1,0 +1,8 @@
+{
+  "type": "cloud-kingdoms-justfatlard:cloud_kingdom",
+  "tier": "citadel",
+  "biomes": "#minecraft:is_overworld",
+  "spawn_overrides": {},
+  "step": "surface_structures",
+  "terrain_adaptation": "none"
+}

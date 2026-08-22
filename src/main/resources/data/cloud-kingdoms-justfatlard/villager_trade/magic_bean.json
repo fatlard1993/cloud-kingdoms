@@ -1,0 +1,6 @@
+{
+  "gives": { "id": "cloud-kingdoms-justfatlard:magic_bean" },
+  "wants": { "count": 24.0, "id": "minecraft:emerald" },
+  "max_uses": 1.0,
+  "reputation_discount": 0.05
+}
