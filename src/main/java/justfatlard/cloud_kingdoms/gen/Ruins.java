@@ -295,7 +295,9 @@ public final class Ruins {
 		// because a spawner is the most valuable thing a spire can hold, and a prize that is always
 		// there is inventory rather than a find.
 		if (random.nextInt(100) < 60) {
-			plan.spawner(base.relative(doorway.getClockWise(), radius - 2).above(), EntityTypes.VEX);
+			BlockPos vexCage = base.relative(doorway.getClockWise(), radius - 2).above();
+			spawnerCell(plan, vexCage);
+			plan.spawner(vexCage, EntityTypes.VEX);
 		}
 
 		brokenArches(plan, field, base.getX(), base.getZ(), radius + 5, 3 + random.nextInt(3), random);
@@ -378,10 +380,14 @@ public final class Ruins {
 		// they have to break into. The breeze is the constant, because a citadel is a wind-scoured
 		// place and one is what makes the hall hostile to stand in; the second is a coin toss.
 		Direction hall = Direction.Plane.HORIZONTAL.getRandomDirection(random);
-		plan.spawner(base.relative(hall, inner + 1).above(), EntityTypes.BREEZE);
+		BlockPos breezeCage = base.relative(hall, inner + 1).above();
+		spawnerCell(plan, breezeCage);
+		plan.spawner(breezeCage, EntityTypes.BREEZE);
 
 		if (random.nextInt(100) < 50) {
-			plan.spawner(base.relative(hall.getOpposite(), inner + 1).above(), EntityTypes.VEX);
+			BlockPos hallVexCage = base.relative(hall.getOpposite(), inner + 1).above();
+			spawnerCell(plan, hallVexCage);
+			plan.spawner(hallVexCage, EntityTypes.VEX);
 		}
 
 		plan.chest(base.above(), Direction.NORTH);
@@ -526,5 +532,37 @@ public final class Ruins {
 			}
 		}
 		return cells;
+	}
+
+	/**
+	 * A sealed cell around a spawner, so it works in daylight.
+	 *
+	 * <p>A spawner runs the mob's ordinary spawn checks, and for a vex or a breeze that includes
+	 * darkness - so one standing in an open cloud hall is scenery from dawn until dusk. Vanilla
+	 * answers this by burying its spawners in a room with no windows, and so does this: walls,
+	 * floor and roof of the same quartz the ruin is built from, with three blocks of air inside
+	 * for the mobs to appear in.
+	 *
+	 * <p>Sealed rather than doored. A doorway lets in exactly the skylight the cell exists to keep
+	 * out, and breaking into a room that should not be there is the oldest thing a spawner does.
+	 *
+	 * <p>Written into the plan rather than placed directly, so a cell straddling a chunk boundary
+	 * is clipped by the same code that clips everything else here.
+	 */
+	private static void spawnerCell(Plan plan, BlockPos centre) {
+		BlockState wall = Blocks.SMOOTH_QUARTZ.defaultBlockState();
+		BlockState air = Blocks.AIR.defaultBlockState();
+
+		for (int dx = -2; dx <= 2; dx++) {
+			for (int dy = -1; dy <= 3; dy++) {
+				for (int dz = -2; dz <= 2; dz++) {
+					BlockPos pos = centre.offset(dx, dy, dz);
+					boolean shell = Math.abs(dx) == 2 || Math.abs(dz) == 2 || dy == -1 || dy == 3;
+
+					if (shell) plan.set(pos, wall);
+					else if (!pos.equals(centre)) plan.set(pos, air);
+				}
+			}
+		}
 	}
 }
