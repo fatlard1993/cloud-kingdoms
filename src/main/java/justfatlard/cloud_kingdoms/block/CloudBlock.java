@@ -2,6 +2,10 @@ package justfatlard.cloud_kingdoms.block;
 
 import justfatlard.cloud_kingdoms.CloudKingdoms;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.PositionMoveRotation;
+import net.minecraft.world.entity.Relative;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -205,6 +209,13 @@ public class CloudBlock extends Block {
 	 * at once on a corner, and every block of a 5x5 raft would happily claim a passenger sitting in
 	 * the middle of it. Adding a block to their position per claim would fire them into the sky.
 	 * Assigning an absolute target is idempotent: however many blocks push, the answer is the same.
+	 *
+	 * <p><b>A player has to be told.</b> {@code setPos} moves the entity the server is holding and
+	 * says nothing to the client, which is enough for a mob or a dropped item - the tracker
+	 * broadcasts those - but a player's client keeps reporting the position it still believes in,
+	 * and the server reconciles to it. The cloud rose and the rider stayed where they were: stood
+	 * on a piece to ride it up, and it dropped them. A teleport through the connection is the same
+	 * absolute assertion, delivered somewhere it lands.
 	 */
 	private static void lift(List<Entity> riders, double targetY) {
 		for (Entity rider : riders) {
@@ -212,9 +223,24 @@ public class CloudBlock extends Block {
 			if (rider.isPassenger()) continue;
 			if (rider.getY() >= targetY) continue;
 
+			if (rider instanceof ServerPlayer player) {
+				// Only the height is asserted. Everything else stays relative, so the rider keeps
+				// walking about the deck, keeps looking where they were looking, and keeps
+				// whatever momentum they had while the floor climbs underneath them.
+				player.connection.teleport(
+					new PositionMoveRotation(new Vec3(0.0D, targetY, 0.0D), Vec3.ZERO, 0.0F, 0.0F),
+					RIDING);
+				continue;
+			}
+
 			rider.setPos(rider.getX(), targetY, rider.getZ());
 		}
 	}
+
+	/** Everything except the height, left as it was. */
+	private static final java.util.Set<Relative> RIDING = java.util.Set.of(
+		Relative.X, Relative.Z, Relative.Y_ROT, Relative.X_ROT,
+		Relative.DELTA_X, Relative.DELTA_Y, Relative.DELTA_Z);
 
 	/**
 	 * Carries a fluid the block displaced up into the space above it.
