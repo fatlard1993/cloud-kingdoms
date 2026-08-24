@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "cloud-kingdoms-justfatlard:cloud_forge",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 208,
+    "separation": 80,
+    "salt": 813355205
+  }
+}

@@ -13,6 +13,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.chicken.Chicken;
 import net.minecraft.world.entity.animal.equine.SkeletonHorse;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.monster.skeleton.Skeleton;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -42,6 +43,15 @@ public final class Encounters {
 				case BREEZE -> simple(level, EntityTypes.BREEZE, spawn.pos(), random);
 				case SHULKER -> simple(level, EntityTypes.SHULKER, spawn.pos(), random);
 				case AXOLOTL -> simple(level, EntityTypes.AXOLOTL, spawn.pos(), random);
+				case BLAZE -> simple(level, EntityTypes.BLAZE, spawn.pos(), random);
+				case MAGMA_CUBE -> simple(level, EntityTypes.MAGMA_CUBE, spawn.pos(), random);
+				case STRIDER -> simple(level, EntityTypes.STRIDER, spawn.pos(), random);
+				case ILLUSIONER -> simple(level, EntityTypes.ILLUSIONER, spawn.pos(), random);
+				case FROG -> simple(level, EntityTypes.FROG, spawn.pos(), random);
+				case ALLAY -> simple(level, EntityTypes.ALLAY, spawn.pos(), random);
+				case PIGLIN -> piglin(level, EntityTypes.PIGLIN, spawn.pos(), random, false);
+				case PIGLIN_CHILD -> piglin(level, EntityTypes.PIGLIN, spawn.pos(), random, true);
+				case PIGLIN_BRUTE -> piglin(level, EntityTypes.PIGLIN_BRUTE, spawn.pos(), random, false);
 				case GOLDEN_GOOSE -> goldenGoose(level, spawn.pos(), random);
 				case CHARGED_CREEPER -> chargedCreeper(level, spawn.pos(), random);
 				case HORSEMAN -> horseman(level, spawn.pos(), random);
@@ -92,6 +102,28 @@ public final class Encounters {
 		if (chicken == null) return;
 
 		GoldenGoose.anoint(chicken);
+	}
+
+	/**
+	 * A piglin that will not turn.
+	 *
+	 * <p>Piglins zombify in any dimension that is not the Nether, over about fifteen seconds. A
+	 * homestead left to the default would be a homestead of zombified piglins before the first
+	 * player ever saw it - the tier would generate correctly and then destroy itself unwatched.
+	 *
+	 * <p>The flag that stops it is vanilla's own, the one behind {@code IsImmuneToZombification} on a
+	 * summoned piglin, and setting it here is not a workaround so much as the tier's premise stated
+	 * in code: these are the piglins that broke ties with the Nether, and the game's own word for
+	 * that is that they no longer turn.
+	 */
+	private static void piglin(WorldGenLevel level, net.minecraft.world.entity.EntityType<? extends AbstractPiglin> type,
+			BlockPos pos, RandomSource random, boolean child) {
+		AbstractPiglin piglin = simple(level, type, pos, random);
+		if (piglin == null) return;
+
+		piglin.setImmuneToZombification(true);
+		// After finalizeSpawn, which sets age and gear and would otherwise overwrite this.
+		if (child) piglin.setBaby(true);
 	}
 
 	/** A skeleton on a skeleton horse: the sky patrol. */

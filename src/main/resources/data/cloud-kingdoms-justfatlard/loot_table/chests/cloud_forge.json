@@ -1,32 +1,32 @@
 {
   "type": "minecraft:chest",
-  "random_sequence": "cloud-kingdoms-justfatlard:chests/cloud_bank",
+  "random_sequence": "cloud-kingdoms-justfatlard:chests/cloud_forge",
   "pools": [
     {
       "rolls": { "type": "minecraft:uniform", "min": 3.0, "max": 5.0 },
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:breeze_rod",
+          "name": "minecraft:blaze_rod",
           "weight": 12,
-          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 3.0 } }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:wind_charge",
-          "weight": 10,
-          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 4.0, "max": 12.0 } }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:phantom_membrane",
-          "weight": 9,
           "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 5.0 } }
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_ingot",
-          "weight": 8,
+          "name": "minecraft:blackstone",
+          "weight": 10,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 6.0, "max": 16.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:magma_cream",
+          "weight": 9,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 6.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:gold_ingot",
+          "weight": 9,
           "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 3.0, "max": 8.0 } }
         },
         {
@@ -37,33 +37,33 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:emerald",
-          "weight": 7,
+          "name": "minecraft:fire_charge",
+          "weight": 8,
           "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 6.0 } }
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:gold_ingot",
+          "name": "minecraft:obsidian",
           "weight": 7,
-          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 6.0 } }
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 2.0, "max": 5.0 } }
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:ender_pearl",
+          "name": "minecraft:iron_ingot",
+          "weight": 7,
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 3.0, "max": 8.0 } }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:quartz",
           "weight": 6,
-          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 3.0 } }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:feather",
-          "weight": 5,
           "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 4.0, "max": 10.0 } }
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:diamond",
           "weight": 3,
-          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 2.0 } }
+          "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 3.0 } }
         }
       ]
     },
@@ -71,7 +71,16 @@
       "rolls": 1,
       "entries": [
         { "type": "minecraft:empty", "weight": 6 },
-        { "type": "minecraft:item", "name": "minecraft:name_tag", "weight": 4 },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:warped_fungus_on_a_stick",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:saddle",
+          "weight": 5
+        },
         {
           "type": "minecraft:item",
           "name": "minecraft:book",
@@ -84,11 +93,15 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:golden_apple",
-          "weight": 3,
+          "name": "minecraft:ancient_debris",
+          "weight": 2,
           "modifier": { "type": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1.0, "max": 2.0 } }
         },
-        { "type": "minecraft:item", "name": "minecraft:enchanted_golden_apple", "weight": 1 }
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:netherite_scrap",
+          "weight": 1
+        }
       ]
     }
   ]

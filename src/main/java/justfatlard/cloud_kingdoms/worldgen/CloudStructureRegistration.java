@@ -12,7 +12,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 /**
  * Puts the structure type and the piece type into the built-in registries.
  *
- * <p>The structures themselves are datapack objects: the three tiers, their biome lists and their
+ * <p>The structures themselves are datapack objects: the five tiers, their biome lists and their
  * spacing all live in {@code data/.../worldgen/}. What has to be registered in code is only the pair
  * of codecs those files are deserialized through.
  */

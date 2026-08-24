@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "cloud-kingdoms-justfatlard:cloud_homestead",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 288,
+    "separation": 112,
+    "salt": 813355207
+  }
+}

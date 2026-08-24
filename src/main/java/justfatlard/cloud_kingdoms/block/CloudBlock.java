@@ -3,6 +3,7 @@ package justfatlard.cloud_kingdoms.block;
 import justfatlard.cloud_kingdoms.CloudKingdoms;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -79,8 +80,8 @@ public class CloudBlock extends Block {
 	private static final int RISE_DELAY = 5;
 
 	/**
-	 * How far up a block looks for the water it is dripping. Comfortably more than the thickest
-	 * deck, so a pond sunk into the top of a tarn still reaches the underside below it.
+	 * How far up a block looks for the fluid it is leaking. Comfortably more than the thickest deck,
+	 * so a bowl sunk into the top of a tarn or a forge still reaches the underside below it.
 	 */
 	private static final int DRIP_REACH = 24;
 
@@ -127,11 +128,17 @@ public class CloudBlock extends Block {
 	}
 
 	/**
-	 * Cloud leaks. Water anywhere in the cloud above a block drips out of its underside.
+	 * Cloud leaks. Fluid anywhere in the cloud above a block shows at its underside: water drips,
+	 * lava smokes.
 	 *
-	 * <p>This is what makes a tarn rain on whatever is beneath it, and it is why the ponds are worth
-	 * putting on top: the weather is the point, and it is visible from the ground where the cloud
-	 * itself is not.
+	 * <p>This is what makes a tarn rain and a forge smoke, and it is why both tiers cut their bowls
+	 * into the deck rather than building basins on top of it: what leaks out is the point, and it is
+	 * visible from the ground where the cloud itself is not.
+	 *
+	 * <p><b>Cosmetic on purpose.</b> The particle is the whole effect - no fire is set, no block
+	 * changes, and nothing lands on anybody. A cloud that actually dropped its lava on the terrain a
+	 * hundred and thirty blocks below would be a tier that burns down whatever it drifts over, and
+	 * the drip is meant to be a tell, not a weapon.
 	 *
 	 * <p><b>Server-side, deliberately.</b> The obvious place for a particle is {@code animateTick},
 	 * which is client code, and the client is not running this class - it has a Pandorical stand-in
@@ -148,18 +155,27 @@ public class CloudBlock extends Block {
 
 		for (int up = 1; up <= DRIP_REACH; up++) {
 			BlockState overhead = level.getBlockState(pos.above(up));
+			FluidState fluid = overhead.getFluidState();
 
-			if (overhead.getFluidState().is(FluidTags.WATER)) {
-				level.sendParticles(ParticleTypes.DRIPPING_WATER,
-					pos.getX() + 0.5D, pos.getY() - 0.05D, pos.getZ() + 0.5D,
-					1, 0.25D, 0.0D, 0.25D, 0.0D);
+			if (fluid.is(FluidTags.WATER)) {
+				leak(level, pos, ParticleTypes.DRIPPING_WATER);
+				return;
+			}
+			if (fluid.is(FluidTags.LAVA)) {
+				leak(level, pos, ParticleTypes.DRIPPING_LAVA);
 				return;
 			}
 
-			// Only water carried through unbroken cloud counts. A pond two decks up should not rain
+			// Only fluid carried through unbroken cloud counts. A pond two decks up should not rain
 			// through the open sky between them.
 			if (!overhead.is(this)) return;
 		}
+	}
+
+	private static void leak(ServerLevel level, BlockPos pos, ParticleOptions particle) {
+		level.sendParticles(particle,
+			pos.getX() + 0.5D, pos.getY() - 0.05D, pos.getZ() + 0.5D,
+			1, 0.25D, 0.0D, 0.25D, 0.0D);
 	}
 
 	@Override

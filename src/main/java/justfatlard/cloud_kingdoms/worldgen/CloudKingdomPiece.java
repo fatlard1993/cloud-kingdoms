@@ -7,6 +7,7 @@ import justfatlard.cloud_kingdoms.gen.Encounters;
 import justfatlard.cloud_kingdoms.gen.Kingdom;
 import justfatlard.cloud_kingdoms.gen.Plan;
 import justfatlard.cloud_kingdoms.gen.Ruins;
+import justfatlard.cloud_kingdoms.gen.Templates;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
@@ -114,6 +115,11 @@ public class CloudKingdomPiece extends StructurePiece {
 			placeCloud(level, cloud, chunkBox);
 
 			Plan blueprint = plan(cloud);
+			// Templates first: the ship's own air blocks excavate its berth, so anything the plan
+			// draws around it has to be written after the hole exists rather than into it.
+			for (Plan.Template stamp : blueprint.templates()) {
+				Templates.place(level, stamp, chunkBox, random);
+			}
 			placePlan(level, blueprint, chunkBox);
 			placeChests(level, blueprint, chunkBox);
 			placeSpawners(level, blueprint, chunkBox, random);

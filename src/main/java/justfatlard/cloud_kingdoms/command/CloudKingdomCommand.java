@@ -10,6 +10,7 @@ import justfatlard.cloud_kingdoms.gen.Encounters;
 import justfatlard.cloud_kingdoms.gen.Kingdom;
 import justfatlard.cloud_kingdoms.gen.Plan;
 import justfatlard.cloud_kingdoms.gen.Ruins;
+import justfatlard.cloud_kingdoms.gen.Templates;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Map;
@@ -80,6 +82,14 @@ public final class CloudKingdomCommand {
 					placed++;
 				}
 			}
+		}
+
+		// No chunk to clip against here, so the whole kingdom's reach stands in for one.
+		BoundingBox everything = new BoundingBox(
+			centerX - reach, level.getMinY(), centerZ - reach,
+			centerX + reach, level.getMaxY(), centerZ + reach);
+		for (Plan.Template stamp : plan.templates()) {
+			Templates.place(level, stamp, everything, random);
 		}
 
 		for (Map.Entry<BlockPos, BlockState> entry : plan.blocks().entrySet()) {

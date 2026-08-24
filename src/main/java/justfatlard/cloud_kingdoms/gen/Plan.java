@@ -2,7 +2,9 @@ package justfatlard.cloud_kingdoms.gen;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
@@ -27,11 +29,40 @@ import java.util.Map;
  */
 public final class Plan {
 
-	public enum Encounter { GIANT, VEX, BREEZE, HORSEMAN, CHARGED_CREEPER, SHULKER, AXOLOTL, GOLDEN_GOOSE }
+	public enum Encounter { GIANT, VEX, BREEZE, HORSEMAN, CHARGED_CREEPER, SHULKER, AXOLOTL, GOLDEN_GOOSE,
+		BLAZE, MAGMA_CUBE, STRIDER, ILLUSIONER, FROG, PIGLIN, PIGLIN_CHILD, PIGLIN_BRUTE, ALLAY }
 
 	public record Chest(BlockPos pos, Direction facing) {}
 
 	public record Spawn(BlockPos pos, Encounter encounter) {}
+
+	/**
+	 * A vanilla structure template to stamp into the world, and how much of it survived.
+	 *
+	 * <p>The one thing in this plan that is not resolved to blocks here. Everything else is drawn by
+	 * rule because the mod has no templates of its own; this is the opposite case, where the game
+	 * already ships the asset and re-drawing it by hand would be worse in every way. What the plan
+	 * carries is the decision - which template, where, facing how, how badly broken - and the stamp
+	 * itself happens at write time, where the template manager can be reached.
+	 *
+	 * <p><b>{@code centre} is where the template's footprint should end up centred</b>, not its
+	 * origin corner. A rotated template lands offset from its placement position by an amount that
+	 * depends on its own size, which the plan has no way to know; naming the centre lets whoever
+	 * stamps it work the corner out and lets everything drawn around it agree without either side
+	 * knowing the template's dimensions.
+	 */
+	public record Template(Identifier id, BlockPos centre, Rotation rotation, float integrity,
+			Dressing dressing) {}
+
+	/**
+	 * What to do to a template's stone on the way in.
+	 *
+	 * <p>{@link #NETHER} is vanilla's own conversion, the one behind {@code replace_with_blackstone}
+	 * on its nether ruined portals: stone brick turns to blackstone and gold blocks to gilded
+	 * blackstone, stairs and slabs included. It exists as a processor in the game already, so this
+	 * is a switch rather than a rule list.
+	 */
+	public enum Dressing { NONE, NETHER }
 
 	/** A mob spawner and what it is set to produce. */
 	public record Spawner(BlockPos pos, EntityType<?> entity) {}
@@ -39,6 +70,7 @@ public final class Plan {
 	private final Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
 	private final List<Chest> chests = new ArrayList<>();
 	private final List<Spawn> spawns = new ArrayList<>();
+	private final List<Template> templates = new ArrayList<>();
 	private final List<Spawner> spawners = new ArrayList<>();
 
 	public void set(int x, int y, int z, BlockState state) {
@@ -61,6 +93,11 @@ public final class Plan {
 		spawners.add(new Spawner(pos, entity));
 	}
 
+	public void template(Identifier id, BlockPos centre, Rotation rotation, float integrity,
+			Dressing dressing) {
+		templates.add(new Template(id, centre, rotation, integrity, dressing));
+	}
+
 	public Map<BlockPos, BlockState> blocks() {
 		return blocks;
 	}
@@ -75,5 +112,9 @@ public final class Plan {
 
 	public List<Spawner> spawners() {
 		return spawners;
+	}
+
+	public List<Template> templates() {
+		return templates;
 	}
 }
