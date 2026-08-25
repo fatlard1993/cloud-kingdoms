@@ -55,7 +55,7 @@ public final class Templates {
 
 	public static void place(ServerLevelAccessor level, Plan.Template stamp, BoundingBox clip,
 			RandomSource random) {
-		StructureTemplateManager manager = level.getLevel().getServer().getStructureManager();
+		StructureTemplateManager manager = level.getLevel().getServer().getStructureTemplateManager();
 		Optional<StructureTemplate> found = manager.get(stamp.id());
 
 		if (found.isEmpty()) {
