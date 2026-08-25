@@ -25,7 +25,13 @@ import net.minecraft.util.RandomSource;
  *       thing reading as a boulder. A field sampled per block gives a smooth curved outline; the
  *       clouds the client draws overhead are axis-aligned rectangles, and a round kingdom parked
  *       among them announces itself as something else from a long way off. Sampling once per cell
- *       squares the edge to the same right angles the cloud layer already has.</li>
+ *       squares the edge to the same right angles the cloud layer already has.
+ *
+ *       <p>Half a texel, not a whole one. The client's cloud texture is one texel per twelve
+ *       blocks and matching it exactly seemed right, but a drawn cloud is a thin translucent
+ *       sheet a long way up and a kingdom is a solid deck: at the same step size the deck reads
+ *       as much coarser than the thing it is imitating. Six keeps the right angles and halves
+ *       how far you can see one.</li>
  * </ul>
 
  * <p><b>The quantisation is horizontal only.</b> The top keeps its full per-block relief, because
@@ -48,7 +54,7 @@ public final class CloudField {
 	private static final double EDGE_BITE = 0.30;
 
 	/** Block width of one edge-noise cell. Roughly the size of the lobes it carves. */
-	private static final int EDGE_CELL = 13;
+	private static final int EDGE_CELL = 7;
 
 	/**
 	 * Block width of one cloud cell. The field is sampled once per cell rather than once per block,
@@ -63,7 +69,7 @@ public final class CloudField {
 	 * <p>Sampling per cell also means every column inside a cell is identical, which is what makes
 	 * the isolation prune this class used to run unnecessary: see {@link #isCloudPlaced}.
 	 */
-	private static final int CELL = 12;
+	private static final int CELL = 6;
 
 	private final long seed;
 	private final int baseY;

@@ -4,7 +4,7 @@ Clouds you can land on.
 
 From the ground they are weather, and nothing else. The undersides are cut flat
 at y=192, which is where the client already draws its cloud layer, and the
-outlines are squared off to the same 12-block grid that layer is drawn on, so a
+outlines are squared off to a 6-block grid, half the step the layer itself is drawn on, so a
 kingdom overhead reads as the same white ceiling as everything else up there -
 right angles and all. Finding one means `/locate` or flying up to look - with
 two exceptions, below.
