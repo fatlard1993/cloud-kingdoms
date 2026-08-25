@@ -64,12 +64,30 @@ public final class Encounters {
 
 	private static <T extends Mob> T simple(WorldGenLevel level, net.minecraft.world.entity.EntityType<T> type,
 			BlockPos pos, RandomSource random) {
+		return simple(level, type, pos, random, mob -> {});
+	}
+
+	/**
+	 * One mob, placed and finished before anybody else can see it.
+	 *
+	 * <p>{@code dress} runs after {@code finalizeSpawn}, which rolls a mob's own age and gear and
+	 * would overwrite anything set before it - and <b>before</b> the mob is handed to the world,
+	 * which is the part that used to be wrong. During worldgen this level is a region that writes
+	 * an entity into the chunk the moment it is added, so a mutation made afterwards lands on an
+	 * object the chunk has already taken a copy of. The piglins of a homestead were told to be
+	 * immune to zombification one line too late: the flag was set on a dead letter, the saved
+	 * piglin had no immunity, and every one of them turned within a minute of somebody arriving.
+	 * The children were told to be children just as late.
+	 */
+	private static <T extends Mob> T simple(WorldGenLevel level, net.minecraft.world.entity.EntityType<T> type,
+			BlockPos pos, RandomSource random, java.util.function.Consumer<T> dress) {
 		T mob = type.create(level.getLevel(), EntitySpawnReason.STRUCTURE);
 		if (mob == null) return null;
 
 		mob.snapTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, random.nextFloat() * 360.0F, 0.0F);
 		mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.STRUCTURE, null);
 		mob.setPersistenceRequired();
+		dress.accept(mob);
 		level.addFreshEntityWithPassengers(mob);
 		return mob;
 	}
@@ -118,12 +136,13 @@ public final class Encounters {
 	 */
 	private static void piglin(WorldGenLevel level, net.minecraft.world.entity.EntityType<? extends AbstractPiglin> type,
 			BlockPos pos, RandomSource random, boolean child) {
-		AbstractPiglin piglin = simple(level, type, pos, random);
-		if (piglin == null) return;
-
-		piglin.setImmuneToZombification(true);
-		// After finalizeSpawn, which sets age and gear and would otherwise overwrite this.
-		if (child) piglin.setBaby(true);
+		// A homestead is not the Nether, and these are not visitors: they live here, so the sky
+		// does not get to turn them. Both of these have to be set before the mob is added, which
+		// is what the configurator is for.
+		simple(level, type, pos, random, piglin -> {
+			piglin.setImmuneToZombification(true);
+			if (child) piglin.setBaby(true);
+		});
 	}
 
 	/** A skeleton on a skeleton horse: the sky patrol. */
