@@ -35,6 +35,12 @@ sleeping through does not strand a half-height stalk.
 
 The stalk is climbable and drops nothing when cut.
 
+## Rafts
+
+Cloud below the layer rises until something stops it, and a connected mass rises **as one thing** - laid a block at a time or a hundred at once, it leaves the ground together and arrives together. Build a deck under the line and the whole deck lifts.
+
+Three things stop it. The layer itself, at y=192, where buoyancy switches off entirely so the ceiling is somewhere you can build. Anything solid overhead, until that moves. And **slime or honey touching any block of it** - one block is enough to moor a whole raft, because the mass only rises if every block of it can.
+
 ## The seven tiers
 
 | | Cloud | What is on it | Who is there |

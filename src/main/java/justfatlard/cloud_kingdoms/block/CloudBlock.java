@@ -25,7 +25,14 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.AABB;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Cloud substrate: sand with the sign flipped.
@@ -182,13 +189,94 @@ public class CloudBlock extends Block {
 			1, 0.25D, 0.0D, 0.25D, 0.0D);
 	}
 
+	/**
+	 * The most cloud that moves as one thing.
+	 *
+	 * <p>Past this a mass rises block by block again, which looks worse but costs nothing to
+	 * work out. Nothing a player builds by hand comes close; the ceiling is here so that a
+	 * pathological shape cannot make one block tick walk a hundred thousand neighbours.
+	 */
+	private static final int MAX_MASS = 2048;
+
+	/**
+	 * A raft is one thing, and rises as one.
+	 *
+	 * <p>Every block used to move on its own schedule. Two blocks laid a moment apart were half a
+	 * second out of phase for ever after, so a deck built by hand came apart on the way up - and
+	 * an anchor only ever held the blocks it was touching while the rest of the raft floated off
+	 * without them. Neither is what "a raft" means.
+	 *
+	 * <p>So the connected mass is gathered and tested as a whole: it rises only if every block of
+	 * it can, which is what lets one slime block moor a whole deck, and it moves in one tick,
+	 * which is what keeps it a deck. One block of the mass drives - the lowest, and of those the
+	 * one furthest north-west, chosen by position so that every block of the mass agrees who it
+	 * is without anybody having to remember.
+	 */
 	@Override
 	protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-		if (!canRise(level, pos)) return;
+		List<BlockPos> mass = gather(level, pos);
+
+		// Too big to reason about as one body: fall back to the old solitary rise.
+		if (mass == null) {
+			riseAlone(state, level, pos);
+			return;
+		}
+
+		BlockPos leader = leaderOf(mass);
+		if (!leader.equals(pos)) {
+			// Woken through a block that does not drive this mass - a neighbour changed, or one
+			// was just placed. Hand it to the one that does.
+			level.scheduleTick(leader, this, RISE_DELAY);
+			return;
+		}
+
+		Set<BlockPos> coming = new HashSet<>(mass);
+		for (BlockPos member : mass) {
+			if (!canRise(level, member, coming)) return;
+		}
+
+		// Everything read before anything is written: once the first block moves, the world the
+		// others were measured against is gone.
+		//
+		// A rider is claimed by every block whose destination they overlap - four at once on a
+		// corner - so the target is kept as the highest claim rather than applied per claim. The
+		// answer is then the same however many blocks push, which is what the single-block
+		// version was already careful about.
+		Map<Entity, Double> lifting = new HashMap<>();
+		Map<BlockPos, FluidState> displaced = new HashMap<>();
+		for (BlockPos member : mass) {
+			BlockPos above = member.above();
+			displaced.put(above, level.getFluidState(above));
+
+			double target = member.getY() + 2.0D;
+			for (Entity rider : level.getEntities((Entity) null, new AABB(above), entity -> true)) {
+				lifting.merge(rider, target, Math::max);
+			}
+		}
+
+		// Highest first, so each block moves into a space the one above it has already left.
+		List<BlockPos> order = new ArrayList<>(mass);
+		order.sort((a, b) -> Integer.compare(b.getY(), a.getY()));
+		for (BlockPos member : order) {
+			level.setBlock(member.above(), state, Block.UPDATE_ALL);
+			level.removeBlock(member, false);
+		}
+
+		for (Map.Entry<BlockPos, FluidState> entry : displaced.entrySet()) {
+			carry(level, entry.getValue(), entry.getKey().above());
+		}
+
+		// One block up, each to the top of whatever they were standing on.
+		lifting.forEach((rider, target) -> lift(List.of(rider), target));
+
+		level.scheduleTick(leader.above(), this, RISE_DELAY);
+	}
+
+	/** The old behaviour, for a mass too large to move in one piece. */
+	private void riseAlone(BlockState state, ServerLevel level, BlockPos pos) {
+		if (!canRise(level, pos, Set.of())) return;
 
 		BlockPos above = pos.above();
-
-		// Read the fluid before the block overwrites it, or there is nothing left to carry.
 		FluidState displaced = level.getFluidState(above);
 		List<Entity> riders = level.getEntities((Entity) null, new AABB(above), entity -> true);
 
@@ -199,6 +287,49 @@ public class CloudBlock extends Block {
 		lift(riders, above.getY() + 1.0D);
 
 		level.scheduleTick(above, this, RISE_DELAY);
+	}
+
+	/**
+	 * Every cloud block joined to this one, or null if there are more than {@link #MAX_MASS}.
+	 *
+	 * <p>Faces only. A deck touching another at one corner is two decks, which is also how it
+	 * looks.
+	 */
+	private List<BlockPos> gather(ServerLevel level, BlockPos start) {
+		List<BlockPos> found = new ArrayList<>();
+		Set<BlockPos> seen = new HashSet<>();
+		Deque<BlockPos> queue = new ArrayDeque<>();
+
+		seen.add(start.immutable());
+		queue.add(start.immutable());
+
+		while (!queue.isEmpty()) {
+			BlockPos here = queue.poll();
+			found.add(here);
+			if (found.size() > MAX_MASS) return null;
+
+			for (Direction direction : Direction.values()) {
+				BlockPos next = here.relative(direction);
+				if (!level.getBlockState(next).is(this)) continue;
+				if (!seen.add(next.immutable())) continue;
+				queue.add(next.immutable());
+			}
+		}
+		return found;
+	}
+
+	/** Lowest, then furthest north-west: an ordering every block of the mass computes the same. */
+	private static BlockPos leaderOf(List<BlockPos> mass) {
+		BlockPos best = mass.getFirst();
+		for (BlockPos candidate : mass) {
+			if (candidate.getY() < best.getY()
+				|| (candidate.getY() == best.getY() && candidate.getX() < best.getX())
+				|| (candidate.getY() == best.getY() && candidate.getX() == best.getX()
+					&& candidate.getZ() < best.getZ())) {
+				best = candidate;
+			}
+		}
+		return best;
 	}
 
 	/**
@@ -286,13 +417,17 @@ public class CloudBlock extends Block {
 	 * per-block memory: a cloud block never has to remember whether it is "falling", so it cannot
 	 * get stuck in a stale state across a chunk unload.
 	 */
-	private boolean canRise(LevelReader level, BlockPos pos) {
+	private boolean canRise(LevelReader level, BlockPos pos, Set<BlockPos> mass) {
 		if (pos.getY() >= SETTLE_Y) return false;
 
 		for (Direction direction : Direction.values()) {
 			if (level.getBlockState(pos.relative(direction)).is(ANCHORS_CLOUD)) return false;
 		}
 
-		return level.getBlockState(pos.above()).canBeReplaced();
+		// The block overhead is only a ceiling if it is not coming with us.
+		BlockPos above = pos.above();
+		if (mass.contains(above)) return true;
+
+		return level.getBlockState(above).canBeReplaced();
 	}
 }
