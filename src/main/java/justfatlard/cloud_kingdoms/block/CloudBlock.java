@@ -355,11 +355,22 @@ public class CloudBlock extends Block {
 			if (rider.getY() >= targetY) continue;
 
 			if (rider instanceof ServerPlayer player) {
-				// Only the height is asserted. Everything else stays relative, so the rider keeps
-				// walking about the deck, keeps looking where they were looking, and keeps
-				// whatever momentum they had while the floor climbs underneath them.
+				// Height asserted, and a push upward to carry them to the next one.
+				//
+				// The height alone made the ride a staircase: the rider stood still for five ticks
+				// and then jumped a whole block, four times a second, because that is exactly what
+				// they were being told to do. The push is sized so they climb the block themselves
+				// over the interval and arrive as the cloud does - see GLIDE_IMPULSE - which turns
+				// the same ascent into a continuous one.
+				//
+				// It also costs less. A teleport is not free: while one is outstanding the server
+				// throws away the player's own movement until the client acknowledges it, so a
+				// rider was losing a slice of their input every five ticks just to be stood back
+				// up. A rider already at the height skips it entirely, and gliding is what gets
+				// them there.
 				player.connection.teleport(
-					new PositionMoveRotation(new Vec3(0.0D, targetY, 0.0D), Vec3.ZERO, 0.0F, 0.0F),
+					new PositionMoveRotation(new Vec3(0.0D, targetY, 0.0D),
+						new Vec3(0.0D, GLIDE_IMPULSE, 0.0D), 0.0F, 0.0F),
 					RIDING);
 				continue;
 			}
@@ -368,10 +379,28 @@ public class CloudBlock extends Block {
 		}
 	}
 
-	/** Everything except the height, left as it was. */
+	/**
+	 * Everything except the height and the climb, left as it was.
+	 *
+	 * <p>{@code DELTA_Y} is deliberately absent where the others are present: the two horizontal
+	 * deltas stay relative so a rider keeps walking wherever they were walking, and the vertical
+	 * one is asserted so the climb can be handed to them rather than added to whatever they had.
+	 */
 	private static final java.util.Set<Relative> RIDING = java.util.Set.of(
 		Relative.X, Relative.Z, Relative.Y_ROT, Relative.X_ROT,
-		Relative.DELTA_X, Relative.DELTA_Y, Relative.DELTA_Z);
+		Relative.DELTA_X, Relative.DELTA_Z);
+
+	/**
+	 * Upward speed handed to a rider at each step, in blocks per tick.
+	 *
+	 * <p>Sized against the climb it has to cover. A block every {@link #RISE_DELAY} ticks is what
+	 * the cloud does, and a player thrown upward at this speed covers 0.96 of a block in that time
+	 * once gravity and drag have taken their cut - so they arrive just under the next step rather
+	 * than waiting at the last one. Deliberately a shade under rather than over: undershooting
+	 * leaves a few hundredths for the next assertion to tidy up, while overshooting would have them
+	 * climbing faster than the cloud and drifting off the top of it.
+	 */
+	private static final double GLIDE_IMPULSE = 0.36D;
 
 	/**
 	 * Carries a fluid the block displaced up into the space above it.

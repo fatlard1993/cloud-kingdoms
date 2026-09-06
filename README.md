@@ -73,7 +73,7 @@ citadel; it is not a lesser visit.
 
 Banks are still the common one. Spacing is 64 chunks for banks, 112 for tarns,
 144 for spires, 208 for forges, 288 for homesteads, 320 for citadels and 384 for
-wrecks, all in `data/.../worldgen/structure_set/`.
+wrecks. They are ordinary structure sets, so a data pack can change any of them.
 
 ## The bank
 
@@ -330,12 +330,9 @@ Or build one where you are standing, which is what the tiers were tuned with:
 /cloudkingdom citadel 12345    # reproducible
 ```
 
-## Installation
+## Development
 
-Server-side, with Pandorical on the client. The cloud block is registered
-through Pandorical's content sync, so a connecting player needs Pandorical and
-nothing else; the worldgen registries are marked optional, so nothing else about
-the mod asks anything of the client.
+Installing is in [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## License
 

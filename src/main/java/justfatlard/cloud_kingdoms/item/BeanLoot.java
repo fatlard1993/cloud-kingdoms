@@ -8,7 +8,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 import java.util.Set;
 
@@ -52,7 +52,7 @@ public final class BeanLoot {
 			if (!TABLES.contains(key)) return;
 
 			builder.pool(LootPool.lootPool()
-				.setRolls(ConstantValue.exactly(1))
+				.setRolls(ContextIntProviders.exactly(1))
 				.add(EmptyLootItem.emptyItem().setWeight(EMPTY_WEIGHT))
 				.add(LootItem.lootTableItem(ModItems.MAGIC_BEAN).setWeight(1))
 				.build());
