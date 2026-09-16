@@ -11,6 +11,11 @@ two exceptions, below.
 
 Everything above that line is somewhere to be.
 
+
+## Screenshots
+
+![A citadel in the cloud layer: terraces of cloud, a chest, and the giant that guards it](citadel.png)
+
 ## Magic beans
 
 The way up, for anyone without an elytra.
