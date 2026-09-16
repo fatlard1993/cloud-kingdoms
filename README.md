@@ -190,7 +190,7 @@ change.
 
 ## The wreck
 
-The rarest of the six, and the only one that is not a place. The others are
+The rarest of the seven, and the only one that is not a place. The others are
 somewhere the sky put something. This is somewhere something arrived, badly.
 
 **The ship is vanilla's.** `end_city/ship` is a real End ship that the game
@@ -244,9 +244,10 @@ that too.
 Cloud does *not* anchor cloud. Build a raft of it below the line and the whole
 raft lifts, every block leaving together.
 
-Sticky moors **per block**, not per raft: one slime block under a corner holds
-that corner and lets the rest go. Holding a whole raft down means sticky contact
-under all of it.
+Sticky moors **the whole raft**, not only the block it touches: a connected mass
+rises only if every block of it can, so one slime block under a corner holds the
+lot. A mass of more than 2,048 blocks is too big to move as one, and its blocks
+rise on their own instead.
 
 At or above y=192 buoyancy is off entirely: up there it is an ordinary white
 building block, so the cloud layer is somewhere you can actually build. That
@@ -266,12 +267,12 @@ ships rather than re-drawing a worse copy of it.
 - The **cloud mass** is a handful of squashed spheroids summed into a density
   field, thresholded, then bitten into by value noise so the outline is lobed
   rather than regular. Flat underneath, billowing on top, and **squared off in
-  plan**: the field is sampled once per 12-block cell rather than once per
+  plan**: the field is sampled once per 6-block cell rather than once per
   block, so a cell is cloud or sky as a whole and the edge steps at right
-  angles instead of curving. Twelve is the client's own number - the vanilla
-  cloud texture is drawn at twelve blocks to the texel - so a kingdom breaks on
-  the same interval as the layer it is hiding in, and a tier is about as many
-  cells across as vanilla would spend on a cloud that size.
+  angles instead of curving. Six is half the client's own number - the vanilla
+  cloud texture is drawn at twelve blocks to the texel - because a drawn cloud
+  is a thin sheet a long way up and a kingdom is a solid deck: at the full
+  twelve the deck reads as much coarser than the layer it is hiding in.
 - **The squaring is horizontal only.** The top keeps its full per-block relief,
   because the deck is a place to stand: ruins need footings at different
   heights and the tarn and forge need a surface worth cutting a basin into. A
@@ -323,12 +324,48 @@ is a duplication bug in a costume.
 /locate structure cloud-kingdoms-justfatlard:cloud_spire
 ```
 
-Or build one where you are standing, which is what the tiers were tuned with:
+Or, as an op, build one in the sky over where you are standing, which is what the tiers were tuned with. The tier is one of `bank`, `tarn`, `spire`, `forge`, `homestead`, `citadel` or `wreck`:
 
 ```
 /cloudkingdom citadel          # random seed
 /cloudkingdom citadel 12345    # reproducible
 ```
+
+## What the village says about it
+
+With [village-quests](../village-quests) installed, villagers get opinions about
+the sky, written from under the line rather than above it. None of them knows
+there is a place up there and none of them ever finds out: from a field a
+kingdom is weather, so that is what they talk about.
+
+Everything is gated on the thing being real. Only two tiers give themselves
+away from below, and only those two are spoken about:
+
+- **A tarn overhead** rains out of its underside, so the farmer has a paddock
+  that is wet in a dry summer and grass a different green, and the shepherd
+  has a flock that will not graze it.
+- **A forge overhead** smokes out of its own, so there is smoke over the ridge
+  most days with nothing under it burning, and the weaponsmith has walked out
+  to look the once.
+- **Any tier overhead** is a cloud that does not drift, which is the one thing
+  true of all seven. A cartographer at high standing has drawn the same notch
+  out of its south side forty times and does not put it on the maps she sells.
+
+A **beanstalk standing in the village** is the only thing here that asks
+anything of anyone. It came up overnight through a roof and set the pieces
+down at the foot of itself, so the mason wants it cut and somebody wants
+twelve of whatever the village roofs in. A player **carrying a magic bean**
+gets told to plant it in a field, and not this field. A **golden goose** that
+has wandered into town gets counted against the flock and found not to be part
+of it.
+
+Nothing above happens in a village with clear sky and no stalk in the fields.
+
+## Pandorical
+
+Required on the server and on each player's client: the cloud block, the beanstalk
+and the magic bean reach the client through Pandorical's content sync. The worldgen
+itself asks nothing of the client.
 
 ## Development
 

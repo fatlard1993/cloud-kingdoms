@@ -31,6 +31,11 @@ public class CloudKingdoms implements ModInitializer {
 			justfatlard.cloud_kingdoms.integration.CloudTipRegistration.register();
 		}
 
+		// Same guard, same reason: CloudQuestRegistration names village-quests types outright.
+		if (net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("village-quests-justfatlard")) {
+			justfatlard.cloud_kingdoms.integration.CloudQuestRegistration.register();
+		}
+
 		LOGGER.info("Cloud Kingdoms loaded");
 	}
 }
