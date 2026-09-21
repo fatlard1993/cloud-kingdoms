@@ -1,0 +1,15 @@
+{
+  "overview": [
+    "Clouds you can land on. From the ground they are weather and nothing else, but plant a magic bean and a beanstalk grows up to whatever is sitting on the cloud layer above you."
+  ],
+  "versions": {
+    "1.1.0": [
+      "The village talks about the sky. Villagers have lines about the two kinds of kingdom that give themselves away from below - a tarn that rains out of its underside and a forge that smokes - and nobody down there ever learns there is a place up there.",
+      "Cloud block and bean drops tidied up."
+    ],
+    "1.0.0": [
+      "Seven tiers overhead: bank, tarn, spire, forge, homestead, citadel and wreck, each with its own chests and its own garrison, from axolotls and frogs on a tarn to a giant guarding a citadel's vault.",
+      "Magic beans grow a climbable beanstalk to reach them, and there is no throwaway tier - getting onto any cloud at all costs a bean."
+    ]
+  }
+}
