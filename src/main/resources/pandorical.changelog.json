@@ -4,12 +4,17 @@
   ],
   "versions": {
     "1.1.0": [
-      "The village talks about the sky. Villagers have lines about the two kinds of kingdom that give themselves away from below - a tarn that rains out of its underside and a forge that smokes - and nobody down there ever learns there is a place up there.",
+      "The village talks about the sky.",
+      "Villagers have lines about the two kinds of kingdom that give themselves away from below.",
+      "A tarn that rains out of its underside, and a forge that smokes.",
+      "Nobody down there ever learns there is a place up there.",
       "Cloud block and bean drops tidied up."
     ],
     "1.0.0": [
-      "Seven tiers overhead: bank, tarn, spire, forge, homestead, citadel and wreck, each with its own chests and its own garrison, from axolotls and frogs on a tarn to a giant guarding a citadel's vault.",
-      "Magic beans grow a climbable beanstalk to reach them, and there is no throwaway tier - getting onto any cloud at all costs a bean."
+      "Seven tiers overhead: bank, tarn, spire, forge, homestead, citadel and wreck.",
+      "Each with its own chests and garrison, from axolotls on a tarn to a giant in a citadel's vault.",
+      "Magic beans grow a climbable beanstalk to reach them.",
+      "There is no throwaway tier: getting onto any cloud at all costs a bean."
     ]
   }
 }
