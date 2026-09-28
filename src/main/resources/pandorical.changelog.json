@@ -3,6 +3,9 @@
     "Clouds you can land on. From the ground they are weather and nothing else, but plant a magic bean and a beanstalk grows up to whatever is sitting on the cloud layer above you."
   ],
   "versions": {
+    "1.1.1": [
+      "A mod menu icon of a keep on a cloud, instead of a cloud on its own."
+    ],
     "1.1.0": [
       "The village talks about the sky.",
       "Villagers have lines about the two kinds of kingdom that give themselves away from below.",
