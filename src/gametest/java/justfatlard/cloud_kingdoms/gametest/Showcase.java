@@ -43,8 +43,8 @@ public final class Showcase implements FabricClientGameTest {
 			// A kingdom is a hundred blocks across and sits alone in the sky: at the default view
 			// distance most of it is never meshed, and the picture comes out as floating fragments.
 			context.runOnClient(client -> client.options.renderDistance().set(16));
-			server.runCommand("gamerule doDaylightCycle false");
-			server.runCommand("gamerule doWeatherCycle false");
+			server.runCommand("gamerule advance_time false");
+			server.runCommand("gamerule advance_weather false");
 			server.runCommand("weather clear");
 			server.runCommand("time set noon");
 			server.runCommand("gamemode spectator @a");
