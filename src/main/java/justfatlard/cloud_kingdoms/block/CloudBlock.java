@@ -105,12 +105,11 @@ public class CloudBlock extends Block {
 	 * "what can pin a cloud down" is exactly the sort of thing a datapack should be able to extend
 	 * without touching this mod.
 	 *
-	 * <p><b>Sticky moors per block, not per raft.</b> Each cloud block asks only about its own six
-	 * neighbours, so one slime block under the corner of a raft holds that corner and watches the
-	 * rest of the raft leave without it. Mooring a whole raft means sticky contact under every block
-	 * of it. That is a consequence of cloud no longer anchoring cloud and not an oversight: adhesion
-	 * that propagated through the cloud would be the old contact rule back again under another name,
-	 * and rafts would stop floating.
+	 * <p><b>Sticky moors the whole raft.</b> Each cloud block asks only about its own six neighbours,
+	 * but {@link #tick} gathers the connected mass and lets it rise only if every block of it can, so
+	 * one slime block touching any corner holds the entire raft where it is. The exception is a mass
+	 * past {@link #MAX_MASS}, which falls back to rising block by block; there a sticky block holds
+	 * only the cloud it touches.
 	 */
 	public static final TagKey<Block> ANCHORS_CLOUD = TagKey.create(Registries.BLOCK,
 		Identifier.fromNamespaceAndPath(CloudKingdoms.MOD_ID, "anchors_cloud"));
