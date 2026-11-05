@@ -29,7 +29,8 @@
     "pandorical": ">=15.0.0"
   },
   "suggests": {
-    "block-tip": "*"
+    "block-tip": "*",
+    "village-quests-justfatlard": "*"
   },
   "custom": {
     "modmenu": {
