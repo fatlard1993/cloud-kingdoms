@@ -1,0 +1,37 @@
+{
+  "demo": {
+    "name": "Cloud Kingdoms",
+    "icon": "cloud-kingdoms-justfatlard:magic_bean",
+    "about": [
+      "Floating kingdoms of cloud up in the sky, and a magic bean that grows a beanstalk to reach them.",
+      "Place cloud and watch it rise to the cloud layer, or touch it to slime or honey to hold it down. Plant the bean under open sky: at nightfall it grows a beanstalk to the clouds."
+    ]
+  },
+  "pvp_preset": 1,
+  "needs": ["cloud-kingdoms-justfatlard"],
+  "preset": {
+    "name": "Cloud Kingdoms",
+    "icon": "cloud-kingdoms-justfatlard:magic_bean",
+    "pvp": false,
+    "game_mode": "survival",
+    "entry_kit": [
+      {"slot": 0, "item": {"id": "cloud-kingdoms-justfatlard:cloud", "count": 64}},
+      {"slot": 1, "item": {"id": "minecraft:slime_block", "count": 16}},
+      {"slot": 2, "item": {"id": "minecraft:honey_block", "count": 16}},
+      {"slot": 3, "item": {"id": "cloud-kingdoms-justfatlard:magic_bean", "count": 2}},
+      {"slot": 4, "item": {"id": "minecraft:iron_shovel", "count": 1}},
+      {"slot": 5, "item": {"id": "minecraft:oak_planks", "count": 64}},
+      {"slot": 6, "item": {"id": "minecraft:cooked_beef", "count": 8}},
+      {"slot": 9, "item": {"id": "cloud-kingdoms-justfatlard:cloud", "count": 64}}
+    ],
+    "respawn_kit": "entry",
+    "goal": "time",
+    "mobs": "off",
+    "life": 15,
+    "size": 3,
+    "world": "overworld",
+    "shape": "natural",
+    "biome": "minecraft:plains",
+    "weather": "clear"
+  }
+}
