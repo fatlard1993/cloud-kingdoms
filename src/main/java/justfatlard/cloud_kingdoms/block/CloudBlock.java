@@ -138,6 +138,29 @@ public class CloudBlock extends Block {
 	}
 
 	/**
+	 * Cloud does not cast a shadow.
+	 *
+	 * <p>As an ordinary opaque cube a deck blocked the sky, which did two things wrong. Its underside
+	 * read as grey seen from the ground, so a kingdom looked like a slab of stone hung over the world
+	 * instead of a cloud on the cloud plane. And the ground under it went dark, so every kingdom was
+	 * a spawner a hundred and thirty blocks wide, with mobs pouring out of its shade at noon.
+	 *
+	 * <p>Letting skylight through untouched answers both: the air under the deck sits at full sky
+	 * light, so the underside is lit as brightly as anything in the open and the land below is as
+	 * safe as any field. The underside's own directional shading is switched off in the model, which
+	 * is what takes it from lit-grey to white.
+	 */
+	@Override
+	protected boolean propagatesSkylightDown(BlockState state) {
+		return true;
+	}
+
+	@Override
+	protected int getLightDampening(BlockState state) {
+		return 0;
+	}
+
+	/**
 	 * Cloud leaks. Fluid anywhere in the cloud above a block shows at its underside: water drips,
 	 * lava smokes.
 	 *
