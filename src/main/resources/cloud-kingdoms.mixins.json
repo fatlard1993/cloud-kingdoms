@@ -4,7 +4,8 @@
 	"compatibilityLevel": "JAVA_25",
 	"mixins": [
 		"GiantAiMixin",
-		"GoldenGooseMixin"
+		"GoldenGooseMixin",
+		"StaleCloudLightMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
