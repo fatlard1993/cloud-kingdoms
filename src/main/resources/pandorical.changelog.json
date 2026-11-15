@@ -3,6 +3,11 @@
     "Clouds you can land on. From the ground they are weather and nothing else, but plant a magic bean and a beanstalk grows up to whatever is sitting on the cloud layer above you."
   ],
   "versions": {
+    "1.1.6": [
+      "A demo to play in PvP Dimensions' onboarding.",
+      "Clouds no longer cast a shadow: white from underneath, and no mobs spawning in the dark below a kingdom.",
+      "Kingdoms in existing worlds lose their shadow too: chunks saved with the old dark light are relit when they load."
+    ],
     "1.1.5": [
       "Drop changelog notes for changes nothing in the game shows."
     ],
