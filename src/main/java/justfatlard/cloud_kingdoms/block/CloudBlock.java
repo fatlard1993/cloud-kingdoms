@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 /**
  * Cloud substrate: sand with the sign flipped.
@@ -221,6 +222,22 @@ public class CloudBlock extends Block {
 	private static final int MAX_MASS = 2048;
 
 	/**
+	 * True while a raft is being moved. Every block it lays down would otherwise schedule its own
+	 * tick, and each of those would walk the whole raft only to hand the move back to the leader,
+	 * which has already asked for the next step itself.
+	 */
+	private static boolean shifting;
+
+	/**
+	 * Blocks already found to belong to a mass past {@link #MAX_MASS}, for the server tick they were
+	 * found in. Such a mass rises block by block, usually many of its blocks in the same tick, and
+	 * without this each of them would walk {@link #MAX_MASS} neighbours to learn the same thing.
+	 */
+	private static final Map<ServerLevel, Oversized> OVERSIZED = new WeakHashMap<>();
+
+	private record Oversized(int tick, Set<BlockPos> members) {}
+
+	/**
 	 * A raft is one thing, and rises as one.
 	 *
 	 * <p>Every block used to move on its own schedule. Two blocks laid a moment apart were half a
@@ -236,7 +253,14 @@ public class CloudBlock extends Block {
 	 */
 	@Override
 	protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-		List<BlockPos> mass = gather(level, pos);
+		int now = level.getServer().getTickCount();
+		Oversized known = OVERSIZED.get(level);
+		if (known != null && known.tick() == now && known.members().contains(pos)) {
+			riseAlone(state, level, pos);
+			return;
+		}
+
+		List<BlockPos> mass = gather(level, pos, now);
 
 		// Too big to reason about as one body: fall back to the old solitary rise.
 		if (mass == null) {
@@ -279,9 +303,14 @@ public class CloudBlock extends Block {
 		// Highest first, so each block moves into a space the one above it has already left.
 		List<BlockPos> order = new ArrayList<>(mass);
 		order.sort((a, b) -> Integer.compare(b.getY(), a.getY()));
-		for (BlockPos member : order) {
-			level.setBlock(member.above(), state, Block.UPDATE_ALL);
-			level.removeBlock(member, false);
+		shifting = true;
+		try {
+			for (BlockPos member : order) {
+				level.setBlock(member.above(), state, Block.UPDATE_ALL);
+				level.removeBlock(member, false);
+			}
+		} finally {
+			shifting = false;
 		}
 
 		for (Map.Entry<BlockPos, FluidState> entry : displaced.entrySet()) {
@@ -317,7 +346,7 @@ public class CloudBlock extends Block {
 	 * <p>Faces only. A deck touching another at one corner is two decks, which is also how it
 	 * looks.
 	 */
-	private List<BlockPos> gather(ServerLevel level, BlockPos start) {
+	private List<BlockPos> gather(ServerLevel level, BlockPos start, int now) {
 		List<BlockPos> found = new ArrayList<>();
 		Set<BlockPos> seen = new HashSet<>();
 		Deque<BlockPos> queue = new ArrayDeque<>();
@@ -328,7 +357,12 @@ public class CloudBlock extends Block {
 		while (!queue.isEmpty()) {
 			BlockPos here = queue.poll();
 			found.add(here);
-			if (found.size() > MAX_MASS) return null;
+			if (found.size() > MAX_MASS) {
+				Oversized known = OVERSIZED.get(level);
+				if (known != null && known.tick() == now) known.members().addAll(seen);
+				else OVERSIZED.put(level, new Oversized(now, seen));
+				return null;
+			}
 
 			for (Direction direction : Direction.values()) {
 				BlockPos next = here.relative(direction);
@@ -459,6 +493,7 @@ public class CloudBlock extends Block {
 	 * the moment a player first loads the chunk.
 	 */
 	private void scheduleIfBuoyant(Level level, BlockPos pos) {
+		if (shifting) return;
 		if (pos.getY() >= SETTLE_Y) return;
 		level.scheduleTick(pos, this, RISE_DELAY);
 	}
