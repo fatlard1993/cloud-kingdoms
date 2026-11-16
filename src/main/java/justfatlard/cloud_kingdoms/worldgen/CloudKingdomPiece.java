@@ -26,6 +26,8 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * One cloud kingdom: the mass, the ruins on it, the chests in them and the garrison around them.
@@ -47,6 +49,10 @@ import java.util.Map;
  * references it, so the field and the plan get built once instead of once per chunk. The fields are
  * volatile because chunk workers run in parallel: two threads racing here waste a build, which is
  * harmless, but a half-filled plan published to a second thread would silently drop blocks.
+ *
+ * <p>The piece outlives its generation - it stays in the start chunk for as long as that chunk is
+ * loaded - so once every chunk under it has written its share, both are let go. They are pure
+ * functions of the stored seed, so anything that asks again simply builds them again.
  */
 public class CloudKingdomPiece extends StructurePiece {
 
@@ -69,6 +75,9 @@ public class CloudKingdomPiece extends StructurePiece {
 
 	private volatile CloudField field;
 	private volatile Plan plan;
+
+	/** Chunks that have written their share, until all of them have. */
+	private final Set<Long> placed = ConcurrentHashMap.newKeySet();
 
 	public CloudKingdomPiece(Kingdom kingdom, BlockPos origin, long shapeSeed) {
 		super(CloudStructureRegistration.CLOUD_KINGDOM_PIECE, 0, bounds(kingdom, origin));
@@ -120,12 +129,18 @@ public class CloudKingdomPiece extends StructurePiece {
 			for (Plan.Template stamp : blueprint.templates()) {
 				Templates.place(level, stamp, chunkBox, random);
 			}
-			placePlan(level, blueprint, chunkBox);
+			placePlan(level, blueprint, chunkBox, chunkPos);
 			placeChests(level, blueprint, chunkBox);
 			placeSpawners(level, blueprint, chunkBox, random);
 
 			for (Plan.Spawn spawn : blueprint.spawns()) {
 				if (chunkBox.isInside(spawn.pos())) Encounters.spawn(level, spawn, random);
+			}
+
+			if (placed.add(chunkPos.pack()) && placed.size() >= chunksCovered()) {
+				field = null;
+				plan = null;
+				placed.clear();
 			}
 		} catch (Exception e) {
 			// One bad chunk of a cloud beats aborting the chunk's whole decoration pass.
@@ -151,6 +166,12 @@ public class CloudKingdomPiece extends StructurePiece {
 		return cached;
 	}
 
+	private int chunksCovered() {
+		int wide = (boundingBox.maxX() >> 4) - (boundingBox.minX() >> 4) + 1;
+		int deep = (boundingBox.maxZ() >> 4) - (boundingBox.minZ() >> 4) + 1;
+		return wide * deep;
+	}
+
 	private void placeCloud(WorldGenLevel level, CloudField cloud, BoundingBox chunkBox) {
 		int minX = Math.max(boundingBox.minX(), chunkBox.minX());
 		int maxX = Math.min(boundingBox.maxX(), chunkBox.maxX());
@@ -173,8 +194,8 @@ public class CloudKingdomPiece extends StructurePiece {
 		}
 	}
 
-	private void placePlan(WorldGenLevel level, Plan blueprint, BoundingBox chunkBox) {
-		for (Map.Entry<BlockPos, BlockState> entry : blueprint.blocks().entrySet()) {
+	private void placePlan(WorldGenLevel level, Plan blueprint, BoundingBox chunkBox, ChunkPos chunkPos) {
+		for (Map.Entry<BlockPos, BlockState> entry : blueprint.blocksIn(chunkPos)) {
 			BlockPos pos = entry.getKey();
 			if (!chunkBox.isInside(pos)) continue;
 			level.setBlock(pos, entry.getValue(), Block.UPDATE_CLIENTS);

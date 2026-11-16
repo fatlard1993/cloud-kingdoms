@@ -4,10 +4,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +24,10 @@ import java.util.Map;
  * tower on each call and have no way to agree with itself about the parts it skipped.
  *
  * <p>Instead the whole kingdom is drawn into a plan from a stored seed, and each chunk writes the
- * subset of the plan that lands inside it. The plan is rebuilt from scratch on every one of those
- * calls, which is the trade: a few milliseconds of redundant work per chunk buys the freedom to
- * write the generators as straight-line code with an ordinary sequential {@code RandomSource},
- * rather than forcing every decision to be a pure function of its own coordinates.
+ * subset of the plan that lands inside it. Drawing the whole thing for a chunk that only wants a
+ * corner of it is the trade: it buys the freedom to write the generators as straight-line code with
+ * an ordinary sequential {@code RandomSource}, rather than forcing every decision to be a pure
+ * function of its own coordinates.
  */
 public final class Plan {
 
@@ -73,6 +75,9 @@ public final class Plan {
 	private final List<Template> templates = new ArrayList<>();
 	private final List<Spawner> spawners = new ArrayList<>();
 
+	/** {@link #blocks} sorted by chunk, built on first ask. Volatile because chunk workers share a plan. */
+	private volatile Map<Long, List<Map.Entry<BlockPos, BlockState>>> blocksByChunk;
+
 	public void set(int x, int y, int z, BlockState state) {
 		blocks.put(new BlockPos(x, y, z), state);
 	}
@@ -100,6 +105,22 @@ public final class Plan {
 
 	public Map<BlockPos, BlockState> blocks() {
 		return blocks;
+	}
+
+	/**
+	 * The blocks that land in one chunk, in the order they were drawn. Only for a finished plan: the
+	 * sorting is done once and nothing set afterwards is seen.
+	 */
+	public List<Map.Entry<BlockPos, BlockState>> blocksIn(ChunkPos chunk) {
+		Map<Long, List<Map.Entry<BlockPos, BlockState>>> index = blocksByChunk;
+		if (index == null) {
+			index = new HashMap<>();
+			for (Map.Entry<BlockPos, BlockState> entry : blocks.entrySet()) {
+				index.computeIfAbsent(ChunkPos.pack(entry.getKey()), key -> new ArrayList<>()).add(entry);
+			}
+			blocksByChunk = index;
+		}
+		return index.getOrDefault(chunk.pack(), List.of());
 	}
 
 	public List<Chest> chests() {
