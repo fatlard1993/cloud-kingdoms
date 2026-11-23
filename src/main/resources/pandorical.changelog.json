@@ -3,6 +3,9 @@
     "Clouds you can land on. From the ground they are weather and nothing else, but plant a magic bean and a beanstalk grows up to whatever is sitting on the cloud layer above you."
   ],
   "versions": {
+    "1.1.8": [
+      "Describes itself in one short line of what it adds."
+    ],
     "1.1.7": [
       "A rising raft no longer has every block walk the whole raft each step, and a raft too big to move as one stops re-measuring itself block by block.",
       "Each chunk of a kingdom writes only its own share of the ruins, and the drawn kingdom is let go once every chunk has."
